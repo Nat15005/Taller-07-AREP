@@ -1,16 +1,20 @@
 package arep.twitter.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 @Entity
 public class Post {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    private Date dateStamp;
+    @Column(nullable = false)
+    private LocalDateTime dateStamp;
 
     public Long getId() {
         return id;

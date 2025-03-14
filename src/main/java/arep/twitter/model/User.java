@@ -1,14 +1,17 @@
 package arep.twitter.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 public class User {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, unique =true)
     private String username;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
     public Long getId() {
