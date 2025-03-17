@@ -1,21 +1,27 @@
 package arep.twitter.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 @Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String message;
+
+    private String content;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
-    @Column(nullable = false)
-    private LocalDateTime dateStamp;
 
+    @ManyToOne
+    @JoinColumn(name = "stream_id", nullable = false)
+    @JsonBackReference
+    private Stream stream;
+
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -24,12 +30,12 @@ public class Post {
         this.id = id;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public User getUser() {
@@ -38,5 +44,13 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Stream getStream() {
+        return stream;
+    }
+
+    public void setStream(Stream stream) {
+        this.stream = stream;
     }
 }

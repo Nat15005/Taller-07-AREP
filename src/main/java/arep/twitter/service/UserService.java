@@ -1,26 +1,21 @@
 package arep.twitter.service;
 
 import arep.twitter.model.User;
+import arep.twitter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired
-    private repository UserRepository;
+    private UserRepository userRepository;
 
-    public List<User> getStream() {
-        return repository.findAll();
-    }
-    public Optional<User> getPostById(Long id) {
-        return repository.findById(id);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
-    public User createProperty(User user) {
-        return repository.save(user);
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }
