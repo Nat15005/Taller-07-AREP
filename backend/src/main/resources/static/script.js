@@ -33,13 +33,13 @@ async function createUser() {
 
 async function updateFeed() {
     try {
-        const response = await fetch("http://localhost:8080/stream/posts"); // Llamada a la API
+        const response = await fetch("http://localhost:8080/stream/posts");
         if (!response.ok) {
             throw new Error("Error al obtener el feed");
         }
 
         const posts = await response.json();
-        const tweetsContainer = document.querySelector(".tweets-container"); // ✅ Corregido
+        const tweetsContainer = document.querySelector(".tweets-container");
         tweetsContainer.innerHTML = "";
 
         posts.forEach(post => {
