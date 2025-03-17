@@ -1,6 +1,6 @@
 package arep.twitter.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class User {
     private String username;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-
+    @JsonIgnore
     private List<Post> posts;
 
     // Getters y Setters

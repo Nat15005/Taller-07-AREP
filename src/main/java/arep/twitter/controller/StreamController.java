@@ -19,12 +19,12 @@ public class StreamController {
 
     @GetMapping
     public Stream getStream() {
-        return streamService.getStreamById(1L); // Asumiendo que el stream tiene ID = 1
+        return streamService.getStreamById(1L);
     }
 
     @GetMapping("/posts")
     public List<Post> getPostsInStream() {
-        Stream stream = streamService.getStreamById(1L); // Asumiendo que el stream tiene ID = 1
-        return stream.getPosts(); // Devuelve la lista de posts asociados al stream
+        Stream stream = streamService.getStreamById(1L);
+        return stream.getPosts();
     }
 }

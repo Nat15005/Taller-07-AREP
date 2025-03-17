@@ -1,6 +1,6 @@
 package arep.twitter.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,12 +13,11 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "stream_id", nullable = false)
-
+    @JsonIgnore
     private Stream stream;
 
     // Getters y Setters
