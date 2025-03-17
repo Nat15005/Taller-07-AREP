@@ -1,0 +1,115 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    margin: 0;
+    background-color: #15202B;
+    color: white;
+}
+.sidebar {
+    width: 250px;
+    padding: 20px;
+    background-color: #192734;
+}
+.feed {
+    flex: 1;
+    padding: 20px;
+    height: 100vh;
+    border-left: 1px solid #38444D;
+    border-right: 1px solid #38444D;
+}
+.trends {
+    width: 300px;
+    padding: 20px;
+    background-color: #192734;
+}
+.tweet {
+    background: #253341;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+.tweet button {
+    background: #1DA1F2;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.post-box {
+    background: #192734;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+.post-box textarea {
+    width: 100%;
+    background: #253341;
+    border: none;
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    resize: none;
+}
+.post-box button {
+    background: #1DA1F2;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.user-creation {
+    background: #192734;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.user-creation input {
+    width: calc(100% - 20px); /* Asegura que los inputs no sobrepasen los bordes */
+    max-width: 100%; /* Previene que sean más grandes que su contenedor */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: none;
+    background: #253341;
+    color: white;
+}
+
+.user-creation button {
+    background: #1DA1F2;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    float: left;
+}
+
+.post-creation {
+    background: #192734;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    width: 25%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.post-creation input {
+    width: calc(100% - 15px);
+    max-width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: none;
+    background: #253341;
+    color: white;
+}
