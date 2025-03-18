@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8081";
+const API_BASE_URL = "http://ec2-44-202-138-146.compute-1.amazonaws.com:8081";
 
 function showUserInfo(username) {
     const registerForm = document.querySelector(".register-form");
