@@ -72,8 +72,8 @@ body {
 }
 
 .user-creation input {
-    width: calc(100% - 20px); /* Asegura que los inputs no sobrepasen los bordes */
-    max-width: 100%; /* Previene que sean más grandes que su contenedor */
+    width: calc(100% - 20px);
+    max-width: 100%;
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;

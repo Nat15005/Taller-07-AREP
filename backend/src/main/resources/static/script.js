@@ -1,5 +1,25 @@
+const API_BASE_URL = "http://localhost:8081";
+
+function showUserInfo(username) {
+    const registerForm = document.querySelector(".register-form");
+    const userInfo = document.querySelector(".user-info");
+    const loggedUsername = document.querySelector(".logged-username");
+
+    registerForm.style.display = "none";
+    userInfo.style.display = "block";
+    loggedUsername.textContent = username;
+}
+
+function showRegisterForm() {
+    const registerForm = document.querySelector(".register-form");
+    const userInfo = document.querySelector(".user-info");
+
+    registerForm.style.display = "block";
+    userInfo.style.display = "none";
+}
+
 async function createUser() {
-    const usernameInput = document.querySelector(".username-input"); // ✅ Corregido
+    const usernameInput = document.querySelector(".username-input");
     const username = usernameInput.value.trim();
 
     if (!username) {
@@ -7,33 +27,56 @@ async function createUser() {
         return;
     }
 
-    const userData = { username };
-
     try {
-        const response = await fetch("http://localhost:8080/users", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData),
-        });
+        const response = await fetch(`${API_BASE_URL}/users/username/${username}`);
 
-        if (!response.ok) {
-            throw new Error("Error al registrar el usuario");
+        if (response.ok) {
+            const user = await response.json();
+            localStorage.setItem("userId", user.id);
+            localStorage.setItem("username", user.username);
+            alert(`Bienvenido de nuevo, ${user.username}!`);
+            showUserInfo(user.username);
+        } else if (response.status === 404) {
+            const userData = { username };
+            const createResponse = await fetch(`${API_BASE_URL}/users`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData),
+            });
+
+            if (!createResponse.ok) {
+                throw new Error("Error al registrar el usuario");
+            }
+
+            const newUser = await createResponse.json();
+            localStorage.setItem("userId", newUser.id);
+            localStorage.setItem("username", newUser.username);
+            alert(`Usuario registrado: ${newUser.username}`);
+            showUserInfo(newUser.username);
+        } else {
+            throw new Error("Error al verificar el usuario");
         }
 
-        const newUser = await response.json();
-        localStorage.setItem("userId", newUser.id);
-        localStorage.setItem("username", newUser.username);
-        alert(`Usuario registrado: ${newUser.username}`);
         usernameInput.value = "";
 
     } catch (error) {
-        console.error("Error al registrar usuario:", error);
+        console.error("Error al manejar el usuario:", error);
+        alert("Hubo un problema al procesar tu solicitud.");
     }
+}
+
+
+
+function logout() {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+
+    showRegisterForm();
 }
 
 async function updateFeed() {
     try {
-        const response = await fetch("http://localhost:8080/stream/posts");
+        const response = await fetch(`${API_BASE_URL}/stream/posts`);
         if (!response.ok) {
             throw new Error("Error al obtener el feed");
         }
@@ -75,7 +118,7 @@ async function createPost() {
     };
 
     try {
-        const response = await fetch("http://localhost:8080/posts", {
+        const response = await fetch(`${API_BASE_URL}/posts`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(postData),
@@ -95,10 +138,15 @@ async function createPost() {
     }
 }
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
+    const loggedUsername = localStorage.getItem("username");
+    if (loggedUsername) {
+        showUserInfo(loggedUsername);
+    }
+
     document.querySelector(".register-btn").addEventListener("click", createUser);
     document.querySelector(".post-btn").addEventListener("click", createPost);
+    document.querySelector(".logout-btn").addEventListener("click", logout);
+
     updateFeed();
 });

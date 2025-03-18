@@ -10,9 +10,15 @@
     <div class="sidebar">
         <h2>Twitter (X)</h2>
         <div class="user-creation">
-            <h3>Crear Usuario</h3>
-            <input type="text" class="username-input" placeholder="Nombre de usuario">
-            <button class="register-btn">Registrar</button>
+            <div class="register-form">
+                <h3>Crear Usuario</h3>
+                <input type="text" class="username-input" placeholder="Nombre de usuario">
+                <button class="register-btn">Registrar</button>
+            </div>
+            <div class="user-info" style="display: none;">
+                <h3>Usuario: <span class="logged-username"></span></h3>
+                <button class="logout-btn">Cerrar sesión</button>
+            </div>
         </div>
     </div>
     <div class="feed">
