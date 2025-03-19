@@ -24,7 +24,9 @@ function loginWithGoogle() {
         localStorage.setItem("userId", result.user.uid);
         localStorage.setItem("email", result.user.email);
         alert(`Bienvenido, ${result.user.email}!`);
-        window.location.href = "home.html";
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 500);
       });
     })
     .catch((error) => {
@@ -59,7 +61,8 @@ function registerWithEmail() {
       // Crear usuario en el backend
       fetch(`${API_BASE_URL}/users`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`},
         body: JSON.stringify({ email: email, username: username }), // Enviar email y username
       })
       .then(response => {
@@ -71,7 +74,11 @@ function registerWithEmail() {
       .then(data => {
         localStorage.setItem("userId", data.id); // Guardar el ID del usuario en localStorage
         alert("Usuario registrado correctamente.");
-        window.location.href = "home.html"; // Redirigir a la página principal
+
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 500) // Redirigir a la página principal
+
       })
       .catch(error => {
         console.error("Error al crear usuario en el backend:", error);
@@ -100,7 +107,9 @@ function loginWithEmail() {
       localStorage.setItem("email", user.email);
 
       // Obtener usuario del backend
-      fetch(`${API_BASE_URL}/users/email/${user.email}`)
+      fetch(`${API_BASE_URL}/users/email/${user.email}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error("Error al obtener usuario del backend");
@@ -110,7 +119,9 @@ function loginWithEmail() {
         .then(data => {
           localStorage.setItem("userId", data.id); // Guardar el ID del usuario en localStorage
           alert("Inicio de sesión exitoso.");
-          window.location.href = "home.html"; // Redirigir a la página principal
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 500);// Redirigir a la página principal
         })
         .catch(error => {
           console.error("Error al obtener usuario del backend:", error);
@@ -127,6 +138,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerBtn = document.querySelector(".register-btn");
   const loginBtn = document.querySelector(".login-btn");
   const googleBtn = document.querySelector(".google-btn");
+
+
+  if (window.location.pathname.includes("home.html")) {
+    console.log("Token en home:", localStorage.getItem("firebaseToken"));
+  }
 
   if (registerBtn) {
     registerBtn.addEventListener("click", registerWithEmail);

@@ -14,7 +14,7 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://taast-1.amazonaws.com")); // Reemplaza con tu dominio permitido
+        configuration.setAllowedOrigins(List.of("http://taast-1.amazonaws.com", "http://localhost")); // Reemplaza con tu dominio permitido
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

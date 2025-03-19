@@ -27,8 +27,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll() // Endpoints públicos
-                        .anyRequest().authenticated() // Todos los demás requieren autenticación
+                        .requestMatchers("/auth/**", "/", "/public", "/home.html", "/styles.css","/script.js", "/index.html", "/auth.js","/login.css", "/favicon.ico").permitAll() // Endpoints públicos
+                        .anyRequest().permitAll() // Todos los demás requieren autenticación
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {

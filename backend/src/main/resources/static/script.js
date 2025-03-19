@@ -1,4 +1,6 @@
 const API_BASE_URL = "http://localhost:8081";
+const token = localStorage.getItem("firebaseToken");
+console.log("Token en home:", localStorage.getItem("firebaseToken"));
 
 const firebaseConfig = {
   apiKey: "AIzaSyD04aBntsWMTHr7g3nSL26bS8XTV0fZwhg",
@@ -34,14 +36,31 @@ function logout() {
 
 async function updateFeed() {
     try {
-        const response = await fetch(`${API_BASE_URL}/stream/posts`);
+
+        if (!token) {
+            throw new Error("No se encontró el token de autenticación");
+        }
+
+        const response = await fetch(`${API_BASE_URL}/stream/posts`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            }
+        });
+
         if (!response.ok) {
-            throw new Error("Error al obtener el feed");
+            throw new Error(`Error al obtener el feed: ${response.status} ${response.statusText}`);
         }
 
         const posts = await response.json();
         const tweetsContainer = document.querySelector(".tweets-container");
-        tweetsContainer.innerHTML = "";
+
+        if (!tweetsContainer) {
+            throw new Error("No se encontró el contenedor de tweets en el DOM");
+        }
+
+        tweetsContainer.innerHTML = ""; // Limpiar antes de agregar nuevos tweets
 
         posts.forEach(post => {
             const tweetElement = document.createElement("div");
@@ -49,15 +68,18 @@ async function updateFeed() {
             tweetElement.innerHTML = `<p><strong>@${post.user.username}</strong>: ${post.content}</p>`;
             tweetsContainer.appendChild(tweetElement);
         });
+
     } catch (error) {
         console.error("Error al actualizar el feed:", error);
     }
 }
 
+
 async function createPost() {
     const tweetInput = document.querySelector(".tweet-input");
     const tweetContent = tweetInput.value.trim();
     const userId = localStorage.getItem("userId");
+    console.log(userId, "este es el user id")
 
     if (!tweetContent) {
         alert("El post no puede estar vacío.");
@@ -71,14 +93,15 @@ async function createPost() {
 
     const postData = {
         content: tweetContent,
-        user: { id: userId },
+        user: { id: Number(userId) },
         stream: { id: 1 }
     };
 
     try {
         const response = await fetch(`${API_BASE_URL}/posts`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`},
             body: JSON.stringify(postData),
         });
 
