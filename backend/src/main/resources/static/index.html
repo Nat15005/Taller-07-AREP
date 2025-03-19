@@ -4,41 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twitter (X) - Básico</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Twitter (X)</h2>
-        <div class="user-creation">
-            <div class="register-form">
-                <h3>Crear Usuario</h3>
-                <input type="text" class="username-input" placeholder="Nombre de usuario">
-                <button class="register-btn">Registrar</button>
+<div class="sidebar">
+    <h2>Twitter (X)</h2>
+    <div class="user-creation">
+        <!-- Formulario de Inicio de Sesión -->
+        <div class="register-form" id="login-form">
+            <h3>Iniciar Sesión</h3>
+            <div class="input-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" required>
             </div>
-            <div class="user-info" style="display: none;">
-                <h3>Usuario: <span class="logged-username"></span></h3>
-                <button class="logout-btn">Cerrar sesión</button>
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required>
             </div>
+
+            <button class="login-btn">Iniciar Sesión</button>
+
+            <div class="social-login">
+                <p>O inicia sesión con:</p>
+                <button class="btn google-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+                    Google
+                </button>
+            </div>
+            <p class="signup-link">¿No tienes una cuenta? <a href="#" id="show-register">Regístrate</a></p>
+        </div>
+
+        <!-- Formulario de Registro -->
+        <div class="register-form" id="register-form" style="display: none;">
+            <h3>Regístrate</h3>
+            <div class="input-group">
+                <label for="reg-email">Correo electrónico</label>
+                <input type="email" id="reg-email" name="reg-email" required>
+            </div>
+            <div class="input-group">
+                <label for="reg-password">Contraseña</label>
+                <input type="password" id="reg-password" name="reg-password" required>
+            </div>
+
+            <button class="register-btn">Registrarse</button>
+
+            <p class="login-link">¿Ya tienes una cuenta? <a href="#" id="show-login">Inicia sesión</a></p>
         </div>
     </div>
-    <div class="feed">
-        <h2>Inicio</h2>
-        <div class="tweets-container">
-            <div class="tweet">
-                <p><strong>@usuario</strong>: ejemplo</p>
-            </div>
-            <div class="tweet">
-                <p><strong>@otro</strong>: otra de prueba</p>
-            </div>
-        </div>
-    </div>
-    <div class="post-creation">
-        <div class="post-box">
-            <h3>Crear Post</h3>
-            <input type="text" class="tweet-input" placeholder="¿Qué está pasando?"></input>
-            <button class="post-btn">Publicar</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+</div>
+
+<script src="auth.js"></script>
+<script>
+    document.getElementById("show-register").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("register-form").style.display = "block";
+    });
+
+    document.getElementById("show-login").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("register-form").style.display = "none";
+        document.getElementById("login-form").style.display = "block";
+    });
+</script>
 </body>
 </html>

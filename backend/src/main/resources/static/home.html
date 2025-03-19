@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter (X) - Básico</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Twitter (X)</h2>
+        <div class="user-creation">
+            <div class="user-info">
+                <h3>Usuario: <span class="logged-username"></span></h3>
+                <button class="logout-btn">Cerrar sesión</button>
+            </div>
+        </div>
+    </div>
+    <div class="feed">
+        <h2>Inicio</h2>
+        <div class="tweets-container"></div>
+    </div>
+    <div class="post-creation">
+        <div class="post-box">
+            <h3>Crear Post</h3>
+            <input type="text" class="tweet-input" placeholder="¿Qué está pasando?"></input>
+            <button class="post-btn">Publicar</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

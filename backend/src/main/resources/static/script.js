@@ -1,77 +1,35 @@
-const API_BASE_URL = "http://ec2-44-202-138-146.compute-1.amazonaws.com:8081";
+const API_BASE_URL = "http://localhost:8081";
 
-function showUserInfo(username) {
-    const registerForm = document.querySelector(".register-form");
+const firebaseConfig = {
+  apiKey: "AIzaSyD04aBntsWMTHr7g3nSL26bS8XTV0fZwhg",
+  authDomain: "taller7arep.firebaseapp.com",
+  projectId: "taller7arep",
+  storageBucket: "taller7arep.firebasestorage.app",
+  messagingSenderId: "575114387466",
+  appId: "1:575114387466:web:e4cb42065ecb2c40543ff3",
+  measurementId: "G-3N1HSNH0MD"
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+function showUserInfo(email) {
     const userInfo = document.querySelector(".user-info");
     const loggedUsername = document.querySelector(".logged-username");
 
-    registerForm.style.display = "none";
     userInfo.style.display = "block";
-    loggedUsername.textContent = username;
+    loggedUsername.textContent = email;
 }
-
-function showRegisterForm() {
-    const registerForm = document.querySelector(".register-form");
-    const userInfo = document.querySelector(".user-info");
-
-    registerForm.style.display = "block";
-    userInfo.style.display = "none";
-}
-
-async function createUser() {
-    const usernameInput = document.querySelector(".username-input");
-    const username = usernameInput.value.trim();
-
-    if (!username) {
-        alert("Por favor, ingresa un nombre de usuario.");
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/users/username/${username}`);
-
-        if (response.ok) {
-            const user = await response.json();
-            localStorage.setItem("userId", user.id);
-            localStorage.setItem("username", user.username);
-            alert(`Bienvenido de nuevo, ${user.username}!`);
-            showUserInfo(user.username);
-        } else if (response.status === 404) {
-            const userData = { username };
-            const createResponse = await fetch(`${API_BASE_URL}/users`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userData),
-            });
-
-            if (!createResponse.ok) {
-                throw new Error("Error al registrar el usuario");
-            }
-
-            const newUser = await createResponse.json();
-            localStorage.setItem("userId", newUser.id);
-            localStorage.setItem("username", newUser.username);
-            alert(`Usuario registrado: ${newUser.username}`);
-            showUserInfo(newUser.username);
-        } else {
-            throw new Error("Error al verificar el usuario");
-        }
-
-        usernameInput.value = "";
-
-    } catch (error) {
-        console.error("Error al manejar el usuario:", error);
-        alert("Hubo un problema al procesar tu solicitud.");
-    }
-}
-
-
 
 function logout() {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("username");
-
-    showRegisterForm();
+    auth.signOut().then(() => {
+        localStorage.removeItem("firebaseToken");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("email");
+        window.location.href = "index.html";
+    }).catch((error) => {
+        console.error("Error al cerrar sesión:", error);
+    });
 }
 
 async function updateFeed() {
@@ -139,12 +97,14 @@ async function createPost() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const loggedUsername = localStorage.getItem("username");
-    if (loggedUsername) {
-        showUserInfo(loggedUsername);
+    const email = localStorage.getItem("email");
+
+    if (email) {
+        showUserInfo(email);
+    } else {
+        window.location.href = "index.html";
     }
 
-    document.querySelector(".register-btn").addEventListener("click", createUser);
     document.querySelector(".post-btn").addEventListener("click", createPost);
     document.querySelector(".logout-btn").addEventListener("click", logout);
 

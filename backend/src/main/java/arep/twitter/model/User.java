@@ -15,6 +15,9 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
+    private String email;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Post> posts;
@@ -35,6 +38,14 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
     public List<Post> getPosts() {
         return posts;

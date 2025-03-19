@@ -14,9 +14,17 @@ public class UserService {
     private UserRepository userRepository;
 
     public User createUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException("El username ya está en uso");
+        // Verificar si el email ya está en uso
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("El email ya está en uso");
         }
+
+        // Si no se proporciona un username, generar uno automáticamente
+        if (user.getUsername() == null || user.getUsername().isEmpty()) {
+            user.setUsername(user.getEmail().split("@")[0]); // Usar la parte antes del @ como username
+        }
+
+        // Guardar el usuario en la base de datos
         return userRepository.save(user);
     }
 
@@ -30,5 +38,9 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 }
