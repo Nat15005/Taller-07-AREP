@@ -31,7 +31,8 @@ public class PostController {
 
     @PostMapping
     public Post createPost(@RequestBody Post post) {
-        User user = userService.getUserById(post.getUser().getId());
+        //User user = userService.getUserById(post.getUser().getId());
+        User user = userService.getUserByEmail(post.getUser().getEmail());
         if (user == null) {
             throw new RuntimeException("Usuario no encontrado");
         }

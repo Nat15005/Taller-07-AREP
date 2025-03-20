@@ -79,7 +79,8 @@ async function createPost() {
     const tweetInput = document.querySelector(".tweet-input");
     const tweetContent = tweetInput.value.trim();
     const userId = localStorage.getItem("userId");
-    console.log(userId, "este es el user id")
+    const emailId = localStorage.getItem("email")
+    console.log(emailId, "este es el user email")
 
     if (!tweetContent) {
         alert("El post no puede estar vacío.");
@@ -93,7 +94,7 @@ async function createPost() {
 
     const postData = {
         content: tweetContent,
-        user: { id: Number(userId) },
+        user: { email: emailId},
         stream: { id: 1 }
     };
 
