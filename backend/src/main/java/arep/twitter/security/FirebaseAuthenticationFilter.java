@@ -47,21 +47,19 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        // Si el path es público, no aplicar el filtro
         if (isPublicPath(path)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Verificar el token JWT para paths no públicos
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Elimina "Bearer " del token
+            token = token.substring(7);
 
             try {
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-                request.setAttribute("userId", decodedToken.getUid()); // Guarda el ID del usuario en la solicitud
+                request.setAttribute("userId", decodedToken.getUid());
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Token no válido");

@@ -60,7 +60,7 @@ async function updateFeed() {
             throw new Error("No se encontró el contenedor de tweets en el DOM");
         }
 
-        tweetsContainer.innerHTML = ""; // Limpiar antes de agregar nuevos tweets
+        tweetsContainer.innerHTML = "";
 
         posts.forEach(post => {
             const tweetElement = document.createElement("div");

@@ -133,11 +133,11 @@ function loginWithEmail() {
                     return response.json();
                 })
                 .then(data => {
-                    localStorage.setItem("userId", data.id); // Guardar el ID del usuario en localStorage
+                    localStorage.setItem("userId", data.id);
                     alert("Inicio de sesión exitoso.");
                     setTimeout(() => {
                         window.location.href = "home.html";
-                    }, 500); // Redirigir a la página principal
+                    }, 500);
                 })
                 .catch(error => {
                     console.error("Error al obtener usuario del backend:", error);
