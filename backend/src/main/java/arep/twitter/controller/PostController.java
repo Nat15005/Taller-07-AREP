@@ -41,19 +41,21 @@ public class PostController {
             String idToken = authHeader.replace("Bearer ", ""); // Extrae el token del encabezado
             FirebaseToken decodedToken = firebaseService.verifyToken(idToken); // Valida el token
 
+            // Obtener el User desde la base de datos usando el ID (ahora es un String)
             User user = userService.getUserById(post.getUser().getId());
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
             }
-
             post.setUser(user);
 
-            Stream stream = streamService.getStreamById(1L);
+            // Obtener el Stream desde la base de datos
+            Stream stream = streamService.getStreamById(1L); // Usar el ID correcto del stream
             if (stream == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Stream no encontrado");
             }
             post.setStream(stream);
 
+            // Guardar el Post
             Post createdPost = postService.createPost(post);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
         } catch (Exception e) {

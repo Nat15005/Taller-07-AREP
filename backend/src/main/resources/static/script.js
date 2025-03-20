@@ -93,7 +93,7 @@ async function createPost() {
 
     const postData = {
         content: tweetContent,
-        user: { id: Number(userId) },
+        user: { id: userId },
         stream: { id: 1 }
     };
 

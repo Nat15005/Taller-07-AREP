@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Agrega tu filtro de autenticación
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/home.html", "/login.css", "/styles.css", "/auth.js", "/script.js").permitAll() // Archivos estáticos
-                        .requestMatchers("/public/**", "/users", "/stream/posts").permitAll() // Endpoints públicos
+                        .requestMatchers("/public/**", "/users", "/stream/posts", "/posts").permitAll() // Endpoints públicos
                         .requestMatchers("/h2-console/**").permitAll() // Permite acceso a la consola H2
                         .anyRequest().authenticated() // Todos los demás requieren autenticación
                 )

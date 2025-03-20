@@ -30,7 +30,8 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             "/h2-console/**",
             "/test",
             "/h2-console/",
-            "/h2-console"
+            "/h2-console",
+            "/posts"
     );
 
     private boolean isPublicPath(String path) {
