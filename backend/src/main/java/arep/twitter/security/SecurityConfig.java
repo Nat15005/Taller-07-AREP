@@ -24,9 +24,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/home.html", "/login.css", "/styles.css", "/auth.js", "/script.js").permitAll()
-                        .requestMatchers("/public/**", "/users", "/stream/posts", "/posts").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/home.html", "/login.css", "/styles.css", "/auth.js", "/script.js", "/favicon.ico").permitAll()
+                        .requestMatchers("/public/**", "/h2-console/**", "/test").permitAll()
+                        .requestMatchers("/users", "/stream/posts", "/posts").authenticated()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers
@@ -37,6 +37,7 @@ public class SecurityConfig {
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                         })
                 );
+
 
         return http.build();
     }

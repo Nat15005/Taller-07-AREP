@@ -36,11 +36,8 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPost(@RequestBody Post post, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> createPost(@RequestBody Post post) {
         try {
-            String idToken = authHeader.replace("Bearer ", "");
-            FirebaseToken decodedToken = firebaseService.verifyToken(idToken);
-
             User user = userService.getUserById(post.getUser().getId());
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");

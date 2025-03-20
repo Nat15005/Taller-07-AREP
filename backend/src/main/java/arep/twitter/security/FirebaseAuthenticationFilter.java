@@ -2,6 +2,8 @@ package arep.twitter.security;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,13 +27,7 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             "/login.css",
             "/favicon.ico",
             "/public/**",
-            "/users",
-            "/stream/posts",
-            "/h2-console/**",
-            "/test",
-            "/h2-console/",
-            "/h2-console",
-            "/posts"
+            "/test"
     );
 
     private boolean isPublicPath(String path) {
@@ -41,33 +37,25 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        String header = request.getHeader("Authorization");
 
-        String path = request.getRequestURI();
-        if (path.startsWith("/h2-console")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if (isPublicPath(path)) {
+        if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = request.getHeader("Authorization");
+        String token = header.replace("Bearer ", "").trim();
 
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            String uid = decodedToken.getUid();
 
-            try {
-                FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-                request.setAttribute("userId", decodedToken.getUid());
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token no válido");
-                return;
-            }
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token no proporcionado");
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(uid, null, null);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Firebase Token");
             return;
         }
 
