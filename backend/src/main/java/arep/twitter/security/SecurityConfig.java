@@ -13,23 +13,24 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
     private final FirebaseAuthenticationFilter firebaseAuthenticationFilter;
-    private final CorsConfig corsConfig;
 
-    public SecurityConfig(FirebaseAuthenticationFilter firebaseAuthenticationFilter, CorsConfig corsConfig) {
+    public SecurityConfig(FirebaseAuthenticationFilter firebaseAuthenticationFilter) {
         this.firebaseAuthenticationFilter = firebaseAuthenticationFilter;
-        this.corsConfig = corsConfig;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf(csrf -> csrf.disable()) // Deshabilita CSRF (necesario para H2 y otros casos)
+                .addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Agrega tu filtro de autenticación
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/home.html", "/login.css", "/styles.css", "/auth.js", "/script.js").permitAll() // Permite acceso a archivos estáticos
+                        .requestMatchers("/", "/index.html", "/home.html", "/login.css", "/styles.css", "/auth.js", "/script.js").permitAll() // Archivos estáticos
                         .requestMatchers("/public/**", "/users", "/stream/posts").permitAll() // Endpoints públicos
+                        .requestMatchers("/h2-console/**").permitAll() // Permite acceso a la consola H2
                         .anyRequest().authenticated() // Todos los demás requieren autenticación
+                )
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.disable()) // Deshabilita frameOptions para H2
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {

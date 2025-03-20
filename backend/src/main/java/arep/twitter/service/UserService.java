@@ -14,17 +14,14 @@ public class UserService {
     private UserRepository userRepository;
 
     public User createUser(User user) {
-        // Verificar si el email ya está en uso
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("El email ya está en uso");
         }
 
-        // Si no se proporciona un username, generar uno automáticamente
         if (user.getUsername() == null || user.getUsername().isEmpty()) {
-            user.setUsername(user.getEmail().split("@")[0]); // Usar la parte antes del @ como username
+            user.setUsername(user.getEmail().split("@")[0]);
         }
 
-        // Guardar el usuario en la base de datos
         return userRepository.save(user);
     }
 
@@ -32,7 +29,7 @@ public class UserService {
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(String id) { // Cambia de Long a String
         return userRepository.findById(id).orElse(null);
     }
 

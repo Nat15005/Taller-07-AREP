@@ -9,8 +9,7 @@ import java.util.List;
 @Table(name = "\"user\"")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id; // Cambia de Long a String
 
     @Column(unique = true)
     private String username;
@@ -23,11 +22,11 @@ public class User {
     private List<Post> posts;
 
     // Getters y Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -38,6 +37,7 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String getEmail() {
         return email;
     }
@@ -45,7 +45,6 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     public List<Post> getPosts() {
         return posts;

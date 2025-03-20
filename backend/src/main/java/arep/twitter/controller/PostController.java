@@ -3,10 +3,14 @@ package arep.twitter.controller;
 import arep.twitter.model.Post;
 import arep.twitter.model.Stream;
 import arep.twitter.model.User;
+import arep.twitter.service.FirebaseService;
 import arep.twitter.service.PostService;
 import arep.twitter.service.UserService;
 import arep.twitter.service.StreamService;
+import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +27,8 @@ public class PostController {
 
     @Autowired
     private StreamService streamService;
+    @Autowired
+    private FirebaseService firebaseService;
 
     @GetMapping
     public List<Post> getPosts(){
@@ -30,20 +36,29 @@ public class PostController {
     }
 
     @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        User user = userService.getUserById(post.getUser().getId());
-        if (user == null) {
-            throw new RuntimeException("Usuario no encontrado");
-        }
-        post.setUser(user);
+    public ResponseEntity<?> createPost(@RequestBody Post post, @RequestHeader("Authorization") String authHeader) {
+        try {
+            String idToken = authHeader.replace("Bearer ", ""); // Extrae el token del encabezado
+            FirebaseToken decodedToken = firebaseService.verifyToken(idToken); // Valida el token
 
-        Stream stream = streamService.getStreamById(1L);
-        if (stream == null) {
-            throw new RuntimeException("Stream no encontrado");
-        }
-        post.setStream(stream);
+            User user = userService.getUserById(post.getUser().getId());
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+            }
 
-        return postService.createPost(post);
+            post.setUser(user);
+
+            Stream stream = streamService.getStreamById(1L);
+            if (stream == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Stream no encontrado");
+            }
+            post.setStream(stream);
+
+            Post createdPost = postService.createPost(post);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token no válido");
+        }
     }
 
     @GetMapping("/{id}")

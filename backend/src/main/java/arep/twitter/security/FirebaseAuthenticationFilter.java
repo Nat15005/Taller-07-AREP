@@ -26,17 +26,28 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             "/favicon.ico",
             "/public/**",
             "/users",
-            "/stream/posts"
+            "/stream/posts",
+            "/h2-console/**",
+            "/test",
+            "/h2-console/",
+            "/h2-console"
     );
+
+    private boolean isPublicPath(String path) {
+        return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-
+        if (path.startsWith("/h2-console")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         // Si el path es público, no aplicar el filtro
-        if (PUBLIC_PATHS.contains(path)) {
+        if (isPublicPath(path)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,10 +63,12 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                 request.setAttribute("userId", decodedToken.getUid()); // Guarda el ID del usuario en la solicitud
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token no válido");
                 return;
             }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token no proporcionado");
             return;
         }
 

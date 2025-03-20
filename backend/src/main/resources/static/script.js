@@ -98,10 +98,18 @@ async function createPost() {
     };
 
     try {
+        const token = localStorage.getItem("firebaseToken");
+        console.log("Token en home:", token);
+        if (!token) {
+            throw new Error("No se encontró el token de autenticación");
+        }
+
         const response = await fetch(`${API_BASE_URL}/posts`, {
             method: "POST",
-            headers: { "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`},
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify(postData),
         });
 

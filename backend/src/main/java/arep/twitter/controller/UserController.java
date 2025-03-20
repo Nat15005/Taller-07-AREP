@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
+    public User getUser(@PathVariable String id) { // Cambia de Long a String
         return userService.getUserById(id);
     }
 
