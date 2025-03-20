@@ -111,21 +111,16 @@ function loginWithEmail() {
             const user = userCredential.user;
             localStorage.setItem("email", user.email);
 
-            // Obtener el token de Firebase
             user.getIdToken().then((token) => {
                 localStorage.setItem("firebaseToken", token);
 
-                fetch(`${API_BASE_URL}/users`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`
-                        },
-                        body: JSON.stringify({
-                            id: user.uid,
-                            email: email
-                        }),
-                    })
+                fetch(`${API_BASE_URL}/users/email/${email}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Error al obtener usuario del backend");

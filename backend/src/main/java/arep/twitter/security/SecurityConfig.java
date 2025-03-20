@@ -2,6 +2,7 @@ package arep.twitter.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -26,7 +27,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/home.html", "/login.css", "/styles.css", "/auth.js", "/script.js", "/favicon.ico").permitAll()
                         .requestMatchers("/public/**", "/h2-console/**", "/test").permitAll()
-                        .requestMatchers("/users", "/stream/posts", "/posts").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/email/**").permitAll()
+                        .requestMatchers("/users/**").authenticated()
+                        .requestMatchers("/stream/posts", "/posts").authenticated()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers
