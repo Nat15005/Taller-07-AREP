@@ -36,11 +36,16 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPost(@RequestBody Post post) {
+    public ResponseEntity<?> createPost(@RequestBody Post post, @RequestHeader("Authorization") String authHeader) {
         try {
-            User user = userService.getUserById(post.getUser().getId());
+            String idToken = authHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = firebaseService.verifyToken(idToken);
+
+            String email = decodedToken.getEmail();
+
+            User user = userService.getUserByEmail(email);
             if (user == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado en la base de datos");
             }
             post.setUser(user);
 
@@ -52,10 +57,12 @@ public class PostController {
 
             Post createdPost = postService.createPost(post);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token no válido");
         }
     }
+
 
     @GetMapping("/{id}")
     public Post getPost(@PathVariable Long id) {

@@ -17,23 +17,51 @@ function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
     .then((result) => {
-      console.log("Usuario autenticado:", result.user);
+        console.log("Usuario autenticado:", result.user);
 
-      result.user.getIdToken().then((token) => {
-        localStorage.setItem("firebaseToken", token);
-        localStorage.setItem("userId", result.user.uid);
-        localStorage.setItem("email", result.user.email);
-        alert(`Bienvenido, ${result.user.email}!`);
-        setTimeout(() => {
-          window.location.href = "home.html";
-        }, 500);
-      });
+        result.user.getIdToken().then((token) => {
+            localStorage.setItem("firebaseToken", token);
+            localStorage.setItem("userId", result.user.uid);
+            localStorage.setItem("email", result.user.email);
+
+            fetch(`${API_BASE_URL}/users`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: result.user.uid,
+                    email: result.user.email
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al registrar usuario en el backend");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Usuario registrado en el backend:", data);
+                localStorage.setItem("userId", data.id);
+
+                alert(`Bienvenido, ${result.user.email}!`);
+                setTimeout(() => {
+                    window.location.href = "home.html";
+                }, 500);
+            })
+            .catch(error => {
+                console.error("Error al registrar usuario en el backend:", error);
+                alert("Hubo un problema al registrar el usuario en el backend.");
+            });
+        });
     })
     .catch((error) => {
-      console.error("Error en login:", error);
-      alert("Hubo un problema al iniciar sesión con Google.");
+        console.error("Error en login con Google:", error);
+        alert("Hubo un problema al iniciar sesión con Google.");
     });
 }
+
 
 function registerWithEmail() {
     const email = document.querySelector("#reg-email").value.trim();
