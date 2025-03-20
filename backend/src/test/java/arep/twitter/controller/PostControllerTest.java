@@ -1,26 +1,30 @@
 package arep.twitter.controller;
 
+import arep.twitter.controller.PostController;
 import arep.twitter.model.Post;
 import arep.twitter.model.Stream;
 import arep.twitter.model.User;
-import arep.twitter.service.FirebaseService;
 import arep.twitter.service.PostService;
-import arep.twitter.service.StreamService;
 import arep.twitter.service.UserService;
-import com.google.firebase.auth.FirebaseToken;
+import arep.twitter.service.StreamService;
+import arep.twitter.service.FirebaseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class PostControllerTest {
+
+    @InjectMocks
+    private PostController postController;
 
     @Mock
     private PostService postService;
@@ -34,41 +38,97 @@ class PostControllerTest {
     @Mock
     private FirebaseService firebaseService;
 
-    @InjectMocks
-    private PostController postController;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testCreatePostSuccess() throws Exception {
-        Post post = new Post();
-        post.setContent("Test content");
-        User user = new User();
-        user.setId("1");
-        post.setUser(user);
+    void testGetPosts() {
+        Post post1 = new Post();
+        Post post2 = new Post();
+        List<Post> mockPosts = Arrays.asList(post1, post2);
 
-        FirebaseToken decodedToken = mock(FirebaseToken.class);
-        when(firebaseService.verifyToken(anyString())).thenReturn(decodedToken);
-        when(userService.getUserById("1")).thenReturn(user);
-        when(streamService.getStreamById(1L)).thenReturn(new Stream());
-        when(postService.createPost(any(Post.class))).thenReturn(post);
+        when(postService.getAllPosts()).thenReturn(mockPosts);
 
-        ResponseEntity<?> response = postController.createPost(post, "Bearer validToken");
+        List<Post> result = postController.getPosts();
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(post, response.getBody());
+        assertEquals(2, result.size());
+        verify(postService, times(1)).getAllPosts();
     }
 
     @Test
-    void testCreatePostInvalidToken() throws Exception {
-        when(firebaseService.verifyToken(anyString())).thenThrow(new Exception("Invalid token"));
+    void testCreatePost_Success() {
+        User user = new User();
+        user.setId("1");
 
-        ResponseEntity<?> response = postController.createPost(new Post(), "Bearer invalidToken");
+        Stream stream = new Stream();
+        stream.setId(1L);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Token no válido", response.getBody());
+        Post post = new Post();
+        post.setUser(user);
+
+        when(userService.getUserById("1")).thenReturn(user);
+        when(streamService.getStreamById(1L)).thenReturn(stream);
+        when(postService.createPost(any(Post.class))).thenReturn(post);
+
+        ResponseEntity<?> response = postController.createPost(post);
+
+        assertEquals(201, response.getStatusCodeValue());
+        verify(userService, times(1)).getUserById("1");
+        verify(streamService, times(1)).getStreamById(1L);
+        verify(postService, times(1)).createPost(any(Post.class));
+    }
+
+    @Test
+    void testCreatePost_UserNotFound() {
+        User user = new User();
+        user.setId("1");
+
+        Post post = new Post();
+        post.setUser(user);
+
+        when(userService.getUserById("1")).thenReturn(null);
+
+        ResponseEntity<?> response = postController.createPost(post);
+
+        assertEquals(400, response.getStatusCodeValue());
+        assertEquals("Usuario no encontrado", response.getBody());
+        verify(userService, times(1)).getUserById("1");
+        verifyNoInteractions(postService);
+    }
+
+    @Test
+    void testCreatePost_StreamNotFound() {
+        User user = new User();
+        user.setId("1");
+
+        Post post = new Post();
+        post.setUser(user);
+
+        when(userService.getUserById("1")).thenReturn(user);
+        when(streamService.getStreamById(1L)).thenReturn(null);
+
+        ResponseEntity<?> response = postController.createPost(post);
+
+        assertEquals(400, response.getStatusCodeValue());
+        assertEquals("Stream no encontrado", response.getBody());
+        verify(userService, times(1)).getUserById("1");
+        verify(streamService, times(1)).getStreamById(1L);
+        verifyNoInteractions(postService);
+    }
+
+    @Test
+    void testGetPostById() {
+        Post post = new Post();
+        post.setId(1L);
+
+        when(postService.getPostById(1L)).thenReturn(post);
+
+        Post result = postController.getPost(1L);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        verify(postService, times(1)).getPostById(1L);
     }
 }

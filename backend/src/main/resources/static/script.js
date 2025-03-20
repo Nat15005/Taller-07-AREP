@@ -20,7 +20,7 @@ function showUserInfo(email) {
     const loggedUsername = document.querySelector(".logged-username");
 
     userInfo.style.display = "block";
-    loggedUsername.textContent = email;
+    loggedUsername.textContent = email.split('@')[0];
 }
 
 function logout() {
