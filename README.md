@@ -1,4 +1,4 @@
-# 📌 Tarea de Microservicios - Twitter API
+# 📌 Microservices - Twitter API
 
 ## Description
 
@@ -41,12 +41,12 @@ The system consists of the following components:
 4. **Security**:
     - Authentication and authorization are implemented using **JWT** (JSON Web Tokens) with **AWS Cognito** or Firebase.
 
-**Diagrama de Arquitectura:**
+**Architecture Diagram:**
 
 ![Taller07AREP drawio](https://github.com/user-attachments/assets/3253f048-bc8f-47d8-b515-b4f77a9c85da)
 
 ---
-## **Entidades del Sistema**
+## **System Entities**
 
 The system is based on three main entities:
 
@@ -204,6 +204,9 @@ mvn test
 ---
 
 ## Microservices Demonstration Video
+
+https://github.com/user-attachments/assets/6454c577-94b7-46a8-a827-b10e3cb51c6e
+
 
 ---
 
