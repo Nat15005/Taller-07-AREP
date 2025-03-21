@@ -1,45 +1,44 @@
 # 📌 Tarea de Microservicios - Twitter API
 
-## Descripción
+## Description
 
-Este proyecto implementa una API para permitir a los usuarios realizar publicaciones, similar a Twitter. La aplicación fue inicialmente desarrollada como un monolito en Spring Boot y luego se refactorizó en una arquitectura basada en microservicios con AWS Lambda.
+This project implements an API to allow users to make posts, similar to Twitter. The application was initially developed as a monolith in Spring Boot and later refactored into a microservices architecture using AWS Lambda.
+---
+
+## Features
+
+✅ User registration and authentication.
+
+✅ Posting messages.
+
+✅ Storing posts in a single stream.
+
+✅ Web interface in JavaScript deployed on AWS S3.
+
+✅ Security implemented with JWT using Firebase Authentication.
+
+✅ Microservices-based architecture deployed on AWS Lambda.
 
 ---
 
-## Características
+## Architecture
 
-✅ Registro y autenticación de usuarios.
+The system consists of the following components:
 
-✅ Publicación de posts.
-
-✅ Almacenamiento de posts en un stream único.
-
-✅ Interfaz web en JavaScript desplegada en AWS S3.
-
-✅ Seguridad implementada con JWT usando Firebase Authentication.
-
-✅ Arquitectura basada en microservicios desplegada en AWS Lambda.
-
----
-
-## Arquitectura
-
-El sistema está compuesto por los siguientes componentes:
-
-1. **Monolito Spring Boot**:
-    - Inicialmente, el sistema se desarrolló como un monolito que maneja las entidades `Usuario`, `Post` y `Stream`.
-    - El monolito se despliega en un servidor local o en un servicio como AWS Elastic Beanstalk.
-2. **Microservicios**:
-    - El monolito se divide en tres microservicios independientes:
-        - **Servicio de Usuarios**: Maneja la creación y autenticación de usuarios.
-        - **Servicio de Posts**: Permite a los usuarios publicar posts de 140 caracteres.
-        - **Servicio de Stream**: Mantiene un hilo único de todos los posts publicados.
-    - Cada microservicio se despliega en **AWS Lambda** y se comunica a través de **API Gateway**.
-3. **Aplicación Web**:
-    - Una aplicación web desarrollada en **JavaScript** que consume los servicios desplegados en AWS Lambda.
-    - La aplicación se despliega en **Amazon S3** y está disponible públicamente en internet.
-4. **Seguridad**:
-    - Se implementa autenticación y autorización usando **JWT** (JSON Web Tokens) con **AWS Cognito** o Firebase.
+1. **Spring Boot Monolith**:
+    - Initially, the system was developed as a monolith handling the entities User, Post, and Stream.
+    - The monolith is deployed on a local server or a service like AWS Elastic Beanstalk.
+2. **Microservices**:
+    - The monolith is divided into three independent microservices:
+        - **User Service**: Handles user creation and authentication.
+        - **Post Service**: Allows users to publish 140-character posts.
+        - **Stream Service**: Maintains a unique thread of all published posts.
+    - Each microservice is deployed on **AWS Lambda** and communicates via **API Gateway**.
+3. **Web Application**:
+    - A web application developed in **JavaScript** that consumes the services deployed on AWS Lambda.
+    - The application is deployed on **Amazon S3** and is publicly available on the internet.
+4. **Security**:
+    - Authentication and authorization are implemented using **JWT** (JSON Web Tokens) with **AWS Cognito** or Firebase.
 
 **Diagrama de Arquitectura:**
 
@@ -48,23 +47,23 @@ El sistema está compuesto por los siguientes componentes:
 ---
 ## **Entidades del Sistema**
 
-El sistema está basado en tres entidades principales:
+The system is based on three main entities:
 
 1. **Usuario**:
-    - Representa a un usuario registrado en la plataforma.
-    - Atributos: `id`, `username`, `email`, `password`.
+    - Represents a registered user on the platform.
+    - Attributes: `id`, `username`, `email`, `password`.
 2. **Post**:
-    - Representa un mensaje de 140 caracteres publicado por un usuario.
-    - Atributos: `id`, `content`, `userId`, `streamId`.
+    - Represents a 140-character message published by a user.
+    - Attributes: `id`, `content`, `userId`, `streamId`.
 3. **Stream**:
-    - Representa un hilo único que contiene todos los posts publicados.
-    - Atributos: `id`, `posts`.
+    - Represents a unique thread that contains all published posts.
+    - Attributes: `id`, `posts`.
       
 ---
 
-## Videos Demostrativos de los Pasos Solicitados para el Desarrollo
+## Demonstration Videos of Development Steps
 
-1. Diseñe un API y cree un monolito Spring que permita a los usuarios hacer posts de 140 caracteres e ir registrandolos en un stream único de posts (a la Twitter). Piense en tres entidades Usuario, hilo(stream), posts.
+1. Design an API and create a Spring monolith that allows users to make 140-character posts and register them in a unique post stream (similar to Twitter). Consider three entities: User, Stream, and Post.
   
   https://github.com/user-attachments/assets/57da2eca-0929-4f1f-b73e-9149bddee055
   
@@ -73,123 +72,123 @@ El sistema está basado en tres entidades principales:
   https://github.com/user-attachments/assets/e8ebf0a0-009c-49dc-8699-1caef0796fce
 
 
-2. Cree un aplicación JS para usar el servicio. Depliegue la aplicación en S3. Asegúrese que esté disponible sobre internet.
+2. Create a JavaScript application to use the service. Deploy the application on S3. Ensure it is accessible over the internet.
   
   https://github.com/user-attachments/assets/abb897c4-138e-4e92-9444-7668533e3013
 
-3. Pruebe la aplicación Web
+3. Test the web application.
 
-4. Agregue seguridad usando JWT con el servicio cognito de AWS o otra tecnología.
+4. Add security using JWT with AWS Cognito or another technology.
 
   https://github.com/user-attachments/assets/1b8e6998-51c8-401f-815d-d8d3eb695b92
 
-6. Separe el monolito en tres microservicios independientes usando lambda.
-7. Despliegue el servicio en AWS lambda
+6. Separate the monolith into three independent microservices using Lambda.
+7. Deploy the service on AWS Lambda.
 
 ---
 
-## **Despliegue del Monolito**
+## **Monolith Deployment**
 
-El monolito se desarrolló utilizando **Spring Boot** y se desplegó inicialmente en un servidor local o en **AWS Elastic Beanstalk**. A continuación, se detallan los pasos para desplegar el monolito:
+The monolith was developed using **Spring Boot** and initially deployed on a local server or  **AWS EC2**. Below are the steps to deploy the monolith:
 
-1. **Clonar el repositorio**:
+1. **Clone the repository**:
     
     ```bash
     git clone https://github.com/Nat15005/Taller-07-AREP.git
     cd Taller-07-AREP
     ```
     
-2. **Compilar y ejecutar el monolito**:
+2. **Build and run the monolith**:
     
     ```bash
     mvn clean install
     mvn spring-boot:run
     ```
     
-3. **Acceder a la API**:
-    - La API estará disponible en `http://localhost:8080`.
+3. **Access the API**:
+    - The API will be available at `http://localhost:8080`.
 
 ---
 
-## **Despliegue en AWS Lambda**
+## **Deployment on AWS Lambda**
 
-Los microservicios se desplegaron en **AWS Lambda** utilizando el adaptador **aws-serverless-java-container**. A continuación, se detallan los pasos para desplegar un microservicio:
+The microservices were deployed on **AWS Lambda** using the **aws-serverless-java-container** adapter. Below are the steps to deploy a microservice:
 
-1. **Empaquetar el microservicio**:
+1. **Package the microservice**:
     
     ```bash
     mvn clean package
     ```
     
-2. **Subir el archivo JAR a AWS Lambda**:
-    - Sube el archivo JAR generado (`target/microservicio.jar`) a AWS Lambda.
-3. **Configurar el manejador**:
-    - Configura el manejador (`Handler`) para que apunte a la clase principal del microservicio (por ejemplo, `arep.twitter.UserLambdaHandler`).
-4. **Configurar API Gateway**:
-    - Crea un API Gateway para exponer los endpoints del microservicio.
+2. **Upload the JAR file to AWS Lambda**:
+    - Upload the generated JAR file (`target/microservicio.jar`) to AWS Lambda.
+3. **Configure the handlerr**:
+    - Set up the (`Handler`) to point to the main class of the microservice (for example, `arep.twitter.UserLambdaHandler`).
+4. **Configure API Gateway**:
+    - Create an API Gateway to expose the microservice's endpoints..
 
 ---
 
-## **Separación en Microservicios**
+## **Microservices Separation**
 
-El monolito se dividió en tres microservicios independientes:
+The monolith was divided into three independent microservices:
 
-1. **Servicio de Usuarios**:
-    - Maneja la creación y autenticación de usuarios.
-    - Desplegado en AWS Lambda.
-2. **Servicio de Posts**:
-    - Permite a los usuarios publicar posts de 140 caracteres.
-    - Desplegado en AWS Lambda.
-3. **Servicio de Stream**:
-    - Mantiene un hilo único de todos los posts publicados.
-    - Desplegado en AWS Lambda.
+1. **User Service**:
+    - Handles user creation and authentication.
+    - Deployed on AWS Lambda.
+2. **Post Service**:
+    - Allows users to publish 140-character posts.
+    - Deployed on AWS Lambda.
+3. **Stream Service**:
+    - Maintains a unique thread of all published posts.
+    - Deployed on AWS Lambda.
 
-Cada microservicio se comunica a través de **API Gateway** y utiliza **AWS Lambda** para ejecutar la lógica de negocio.
+Each microservice communicates via **API Gateway** and uses **AWS Lambda** to execute business logic.
 
 ---
 
-## **Aplicación Web**
+## **Web Application**
 
-La aplicación web se desarrolló en **JavaScript** y se desplegó en **Amazon S3**. A continuación, se detallan los pasos para desplegar la aplicación:
+The web application was developed in **JavaScript** and deployed on **Amazon S3**. Below are the steps to deploy the application:
 
-1. **Subir los archivos estáticos S3**:
-    - Sube los archivos generados (`build/`) a un bucket de S3.
-2. **Habilitar el acceso público**:
-    - Configura el bucket de S3 para que sea accesible públicamente.
+1. **Upload static files to S3**:
+    - Upload the generated files (`build/`) to an S3 bucket.
+2. **Enable public access**:
+    - Configure the S3 bucket to be publicly accessible.
 3. **Acceder a la aplicación**:
-    - La aplicación estará disponible en la URL proporcionada por S3 (por ejemplo, `http://tu-bucket.s3-website-us-east-1.amazonaws.com`).
+    - The application will be available at the URL provided by S3 (e.g., `http://tu-bucket.s3-website-us-east-1.amazonaws.com`).
 
 ---
 
-## **Pruebas**
+## **Testing**
 
-Se realizaron pruebas unitarias y de integración para cada componente del sistema. A continuación, se detallan los tipos de pruebas realizadas:
+Unit and integration tests were conducted for each system component. Below are the types of tests performed:
 
-1. **Pruebas Unitarias**:
-    - Se utilizó **JUnit 5** y **Mockito** para probar las clases y métodos individuales.
-2. **Pruebas de Integración**:
-    - Se probó la integración entre los microservicios y la aplicación web.
-3. **Pruebas de Carga**:
-    - Se utilizó **Apache JMeter** para simular múltiples usuarios y verificar el rendimiento del sistema.
+1. **Unit Tests**:
+    - **JUnit 5** and **Mockito** were used to test individual classes and methods.
+2. **Integration Tests**:
+    - The integration between microservices and the web application was tested.
+3. **Load Tests**:
+    - **Apache JMeter** was used to simulate multiple users and verify system performance.
 
 ---
 
-## **Seguridad**
+## **Security**
 
-Se implementó seguridad utilizando **JWT** (JSON Web Tokens) con **AWS Cognito** o Firebase. A continuación, se detallan los pasos para configurar la seguridad:
+Security was implemented using **JWT** (JSON Web Tokens) with **AWS Cognito** or Firebase. Below are the steps to configure security:
 
-1. **Configurar AWS Cognito**:
-    - Crea un User Pool en AWS Cognito.
-    - Configura los clientes y permisos necesarios.
-2. **Integrar JWT en Spring Boot**:
-    - Configura Spring Security para validar los tokens JWT.
-3. **Proteger los endpoints**:
-    - Asegura los endpoints de la API utilizando anotaciones como `@PreAuthorize`.
+1. **Set up AWS Cognito**:
+    - Create a User Pool in AWS Cognito.
+    - Configure the necessary clients and permissions.
+2. **Integrate JWT into Spring Boot**:
+    - Configure Spring Security to validate JWT tokens.
+3. **Protect API endpoints**:
+    - Secure API endpoints using annotations like`@PreAuthorize`.
 ---
 
-##  Pruebas
+##  Testing
 
-Se realizaron pruebas unitarias y de integración para verificar el correcto funcionamiento del sistema. 
+Unit and integration tests were performed to verify system functionality.
 
 ![image](https://github.com/user-attachments/assets/29bedff8-3293-41e3-b395-57db6f522614)
 
@@ -203,11 +202,11 @@ mvn test
 
 ---
 
-## Video de Demostración Microservicios
+## Microservices Demonstration Video
 
 ---
 
-## 👨‍💻 Equipo de Desarrollo
+## 👨‍💻 Development Team
 
 - **Ana Maria Duran Burgos** - [GitHub](https://github.com/AnaDuranB)
 - **Laura Natalia Rojas Robayo** - [GitHub](https://github.com/Nat15005)
