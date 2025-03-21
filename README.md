@@ -3,6 +3,7 @@
 ## Description
 
 This project implements an API to allow users to make posts, similar to Twitter. The application was initially developed as a monolith in Spring Boot and later refactored into a microservices architecture using AWS Lambda.
+
 ---
 
 ## Features
